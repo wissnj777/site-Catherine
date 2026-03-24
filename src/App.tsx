@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { GoogleGenAI } from "@google/genai";
 import { 
   Menu, 
   X, 
@@ -15,10 +16,13 @@ import {
   ShieldCheck, 
   Compass, 
   Zap,
-  ChevronDown
+  ChevronDown,
+  Sparkles
 } from 'lucide-react';
 
 // --- Components ---
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const HorseIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
   <svg 
@@ -174,6 +178,73 @@ const FAQItem = ({ question, answer }: { question: string, answer: string, key?:
   );
 };
 
+const AboutImage = () => {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const generateImage = async () => {
+    setLoading(true);
+    try {
+      const prompt = "A high-quality artistic photograph of a white horse rearing up with a blonde woman seen from behind. The photo is primarily black and white but features selective orange accents matching the website's theme (hex #F27D26). The horse has orange leg wraps, an orange saddle pad, and other small orange details. Cinematic lighting, professional photography, elegant and powerful atmosphere.";
+      
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+          parts: [{ text: prompt }],
+        },
+        config: {
+          imageConfig: {
+            aspectRatio: "3:4",
+          },
+        },
+      });
+
+      for (const part of response.candidates?.[0]?.content?.parts || []) {
+        if (part.inlineData) {
+          setImageUrl(`data:image/png;base64,${part.inlineData.data}`);
+          break;
+        }
+      }
+    } catch (error) {
+      console.error("Error generating image:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Initial generation or use default
+    generateImage();
+  }, []);
+
+  if (loading && !imageUrl) {
+    return (
+      <div className="w-full h-full bg-surface flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+        <span className="font-heading text-[10px] font-bold tracking-widest uppercase text-accent animate-pulse">Génération de l'image...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full">
+      <img 
+        src={imageUrl || "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071&auto=format&fit=crop"} 
+        alt="Catherine Evrard - Vision Équestre" 
+        className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
+        referrerPolicy="no-referrer"
+      />
+      <button 
+        onClick={(e) => { e.stopPropagation(); generateImage(); }}
+        className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md border border-white/20 p-3 rounded-full text-white hover:bg-accent hover:text-black transition-all group/btn"
+        title="Régénérer l'image"
+      >
+        <Sparkles size={16} className={loading ? 'animate-spin' : ''} />
+      </button>
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <div className="min-h-screen selection:bg-accent selection:text-black">
@@ -298,19 +369,16 @@ export default function App() {
       <Ticker />
 
       {/* About Section */}
-      <section className="py-28" id="about">
-        <div className="px-10 max-w-[1400px] mx-auto">
+      <section className="py-28 bg-bg relative overflow-hidden" id="about">
+        <div className="absolute top-0 left-0 w-full h-full opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div className="px-10 max-w-[1400px] mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
             <div className="relative group">
-              <div className="aspect-[3/4] overflow-hidden rounded-sm grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
-                <img 
-                  src="/src/photo.jpg" 
-                  alt="Catherine Evrard avec son cheval à Marrakech" 
-                  className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
-                  referrerPolicy="no-referrer"
-                />
+              <div className="aspect-[3/4] overflow-hidden rounded-sm grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 border border-white/10 shadow-2xl">
+                <AboutImage />
               </div>
-              <div className="absolute -top-6 -right-6 w-32 h-32 border-2 border-accent -z-10 rounded-sm"></div>
+              <div className="absolute -top-6 -right-6 w-32 h-32 border-2 border-accent -z-10 rounded-sm opacity-50"></div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 border-2 border-accent/30 -z-10 rounded-sm opacity-50"></div>
             </div>
 
             <div>
