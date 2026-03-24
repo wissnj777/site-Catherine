@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  
+  --color-bg: #080808;
+  --color-bg-card: #111111;
+  --color-surface: #1a1a1a;
+  --color-accent: #F27D26; /* Catherine's Orange */
+  --color-accent-dim: #9e4e14;
+  --color-text: #f0f0f0;
+  --color-text-muted: #888888;
+  --color-border: #242424;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-bg text-text font-body antialiased selection:bg-accent selection:text-black;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-white/5;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/60 rounded-full hover:bg-white transition-colors;
+}
