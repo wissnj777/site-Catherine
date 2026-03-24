@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import Player from '@vimeo/player';
 import { 
   Menu, 
   X, 
@@ -36,6 +37,39 @@ const HorseIcon = ({ size = 20, className = "" }: { size?: number, className?: s
     <path d="M11 9c0-1.5 1-2.5 2.5-2.5h1" />
   </svg>
 );
+
+const VimeoBackground = ({ videoId }: { videoId: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<Player | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    playerRef.current = new Player(containerRef.current, {
+      id: parseInt(videoId),
+      background: true,
+      autoplay: true,
+      loop: true,
+      muted: true,
+      playsinline: true,
+      autopause: false,
+      controls: false,
+      responsive: true
+    });
+
+    playerRef.current.ready().then(() => {
+      playerRef.current?.play().catch((error) => {
+        console.error("Autoplay failed:", error);
+      });
+    });
+
+    return () => {
+      playerRef.current?.destroy();
+    };
+  }, [videoId]);
+
+  return <div ref={containerRef} className="w-full h-full" />;
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -182,14 +216,11 @@ export default function App() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col justify-end pb-16 md:pb-24 overflow-hidden" id="home">
         {/* Background Video */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <iframe
-            src="https://player.vimeo.com/video/1175250629?autoplay=1&loop=1&muted=1&background=1&playsinline=1"
-            className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            title="Background Video"
-          ></iframe>
+        <div className="absolute inset-0 z-0 overflow-hidden bg-black">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center opacity-50"></div>
+          <div className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+            <VimeoBackground videoId="1175250629" />
+          </div>
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
