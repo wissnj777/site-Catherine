@@ -180,7 +180,7 @@ export default function App() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col justify-end pb-24 overflow-hidden" id="home">
+      <section className="relative min-h-screen flex flex-col justify-end pb-16 md:pb-24 overflow-hidden" id="home">
         {/* Background Video */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <iframe
@@ -222,23 +222,42 @@ export default function App() {
             </motion.span>
           </div>
 
-          <div className="flex flex-col md:flex-row items-end justify-between mt-14 gap-8">
+          <div className="flex flex-col md:flex-row items-center md:items-end justify-between mt-4 md:mt-14 gap-8">
             <div className="max-w-lg"></div>
             
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.75, duration: 0.8 }}
-              className="flex gap-4 flex-wrap"
-            >
-              <a href="#about" className="inline-flex items-center gap-3 bg-accent text-black font-heading text-[11px] font-bold tracking-widest uppercase px-10 py-4 rounded-sm hover:bg-white transition-all group">
-                Mon histoire
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </a>
-              <a href="https://go.lecodeducheval.com/optin?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAdGRleAQqs9BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAadU8HGt_Nr5FGNEaQlSELy-zqrNTpKvTTc47BEL3vuAzAKu9QbiyDEHEMYevg_aem_yWrxvJwhIYBQHEz5d3ZeQw" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-transparent border border-border text-text font-heading text-[11px] font-bold tracking-widest uppercase px-10 py-4 rounded-sm hover:border-accent hover:text-accent transition-all">
-                L'Académie
-              </a>
-            </motion.div>
+            <div className="flex flex-col items-center md:items-end gap-8">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75, duration: 0.8 }}
+                className="flex gap-2 md:gap-4 flex-wrap justify-center md:justify-end"
+              >
+                <a href="#about" className="inline-flex items-center gap-2 md:gap-3 bg-accent text-black font-heading text-[9px] md:text-[11px] font-bold tracking-widest uppercase px-6 py-2.5 md:px-10 md:py-4 rounded-sm hover:bg-white transition-all group">
+                  Mon histoire
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+                <a href="https://go.lecodeducheval.com/optin?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAdGRleAQqs9BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAadU8HGt_Nr5FGNEaQlSELy-zqrNTpKvTTc47BEL3vuAzAKu9QbiyDEHEMYevg_aem_yWrxvJwhIYBQHEz5d3ZeQw" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 md:gap-3 bg-transparent border border-border text-text font-heading text-[9px] md:text-[11px] font-bold tracking-widest uppercase px-6 py-2.5 md:px-10 md:py-4 rounded-sm hover:border-accent hover:text-accent transition-all">
+                  L'Académie
+                </a>
+              </motion.div>
+
+              {/* Mobile Scroll Indicator */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 1 }}
+                className="md:hidden flex flex-col items-center gap-1 font-heading text-[8px] font-bold tracking-[0.2em] uppercase text-white/40 cursor-pointer"
+                onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <span>Scroll</span>
+                <motion.div
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                >
+                  <ChevronDown size={12} />
+                </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
 
@@ -252,7 +271,7 @@ export default function App() {
             opacity: { repeat: Infinity, duration: 1, ease: "easeInOut" },
             y: { delay: 1.1, duration: 0.8 }
           }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 font-heading text-[11px] font-bold tracking-[0.3em] uppercase text-white cursor-pointer"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-3 font-heading text-[11px] font-bold tracking-[0.3em] uppercase text-white cursor-pointer"
           onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
         >
           <span className="drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">Scroll</span>
